@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - raidmonitor-network
+
+  backend:
+    build:
+      context: ./python/backend
+      dockerfile: Dockerfile
+    container_name: raidmonitor-backend
+    depends_on:
+      - rabbitmq
+    ports:
+      - "5000:5000"
+    networks:
+      - raidmonitor-network
+
+  webserver:
+    image: nginx:alpine
+    container_name: raidmonitor-webserver
+    volumes:
+      - ./html:/usr/share/nginx/html
+    ports:
+      - "8443:80"
+    networks:
+      - raidmonitor-network
+
+networks:
+  raidmonitor-network:
+    driver: bridge

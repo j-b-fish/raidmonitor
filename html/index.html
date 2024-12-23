@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAID Status Monitor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 50%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+            background-color: #fff;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    </style>
+    <script>
+        async function fetchRaidStatus() {
+            try {
+                const response = await fetch('http://192.168.1.21:5000/raid_status');
+                const data = await response.json();
+                document.getElementById('raid-state').innerText = data['RAID State'];
+                document.getElementById('active-devices').innerText = data['Active Devices'];
+                document.getElementById('failed-devices').innerText = data['Failed Devices'];
+                document.getElementById('spare-devices').innerText = data['Spare Devices'];
+                document.getElementById('date').innerText = data['Date'];
+            } catch (error) {
+                console.error('Error fetching RAID status:', error);
+            }
+        }
+
+        function startAutoRefresh() {
+            fetchRaidStatus();
+            setInterval(fetchRaidStatus, 5000); // Refresh every 5 seconds
+        }
+
+        window.onload = startAutoRefresh;
+    </script>
+</head>
+<body>
+    <h1>RAID Status Monitor</h1>
+    <table>
+        <tr>
+            <th>Date</th>
+            <td id="date">Loading...</td>
+        </tr>
+        <tr>
+            <th>RAID State</th>
+            <td id="raid-state">Loading...</td>
+        </tr>
+        <tr>
+            <th>Active Devices</th>
+            <td id="active-devices">Loading...</td>
+        </tr>
+        <tr>
+            <th>Failed Devices</th>
+            <td id="failed-devices">Loading...</td>
+        </tr>
+        <tr>
+            <th>Spare Devices</th>
+            <td id="spare-devices">Loading...</td>
+        </tr>
+    </table>
+</body>
+</html>

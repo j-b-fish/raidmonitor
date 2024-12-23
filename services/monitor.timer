@@ -1,0 +1,10 @@
+[Unit]
+Description=Run RAID Monitor Service every 10 seconds
+
+[Timer]
+OnBootSec=10sec
+OnUnitActiveSec=10sec
+Unit=monitor.service
+
+[Install]
+WantedBy=timers.target

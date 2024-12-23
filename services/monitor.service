@@ -1,0 +1,5 @@
+[Unit]
+Description=RAID Monitor Service
+
+[Service]
+ExecStart=/home/boike/raidmonitor/monitor.sh
